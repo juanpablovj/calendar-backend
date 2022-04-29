@@ -24,7 +24,7 @@ const crearUsuario = async (req, res = response) => {
 
     const token = await generarJWT(usuario.id, usuario.name);
 
-    res.status(201).json({
+    return res.status(201).json({
       ok: true,
       uid: usuario.id,
       name: usuario.name,
@@ -32,7 +32,7 @@ const crearUsuario = async (req, res = response) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    return res.status(500).json({
       ok: false,
       msg: "Por favor hable con el administrador",
     });
@@ -55,7 +55,7 @@ const loginUsuario = async (req, res = response) => {
     const validPassword = bcrypt.compareSync(password, usuario.password);
 
     if (!validPassword) {
-      res.status(400).json({
+      return res.status(400).json({
         ok: false,
         msg: "Invalid password",
       });
@@ -63,7 +63,7 @@ const loginUsuario = async (req, res = response) => {
 
     const token = await generarJWT(usuario.id, usuario.name);
 
-    res.status(200).json({
+    return res.status(200).json({
       ok: true,
       uid: usuario.id,
       name: usuario.name,
@@ -71,20 +71,22 @@ const loginUsuario = async (req, res = response) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    return res.status(500).json({
       ok: false,
       msg: "Por favor hable con el administrador",
     });
   }
 };
 
-const revalidarToken = async(req, res = response) => {
+const revalidarToken = async (req, res = response) => {
   const { uid, name } = req;
 
   const token = await generarJWT(uid, name);
 
-  res.json({
+  return res.json({
     ok: true,
+    uid,
+    name,
     token,
   });
 };
